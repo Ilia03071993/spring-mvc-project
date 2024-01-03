@@ -19,7 +19,7 @@ public class OrderController {
 
     @GetMapping("/orders/{id}/edit")
     public String getUpdateOrder(@PathVariable Integer id, Model model) {
-        if (id != null){
+        if (id != null) {
             Order order = orderService.getOrderById(id);
             model.addAttribute("order", order);
         }
@@ -30,7 +30,15 @@ public class OrderController {
     @PutMapping("/orders/{id}")
     public String updateEmployee(@PathVariable Integer id,
                                  @ModelAttribute Order order) {
-        orderService.updateOrder(id,order);
+        orderService.updateOrder(id, order);
+        return "redirect:/clients";
+    }
+
+    @DeleteMapping("orders/{id}")
+    public String removeOrder(@PathVariable Integer id) {
+        if (id != null) {
+            orderService.removeOrder(id);
+        }
         return "redirect:/clients";
     }
 }

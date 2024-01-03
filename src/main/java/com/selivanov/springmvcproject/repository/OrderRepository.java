@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,10 +95,15 @@ public class OrderRepository {
             entityManager.getTransaction().begin();
 
             Order updateOrder = entityManager.find(Order.class, id);
+
+            BigDecimal totalPrice = order.getPrice()
+                    .multiply(BigDecimal.valueOf(order.getAmount()));
+
             if (updateOrder != null) {
                 updateOrder.setProduct(order.getProduct());
                 updateOrder.setPrice(order.getPrice());
                 updateOrder.setAmount(order.getAmount());
+                updateOrder.setTotalPrice(totalPrice);
             }
 
             entityManager.getTransaction().commit();

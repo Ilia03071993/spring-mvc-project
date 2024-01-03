@@ -31,17 +31,20 @@
                   th:action="@{/orders/{id}/edit(id=${order.id})}">
                 <button class="btn btn-warning">update</button>
             </form>
-<!--            <form th:method="get" class="d-inline"-->
-<!--                  action="#">-->
-<!--                <button class="btn btn-danger">delete</button>-->
-<!--            </form>-->
+            <form th:method="delete" class="d-inline"
+                  th:action="@{/orders/{id}(id=${order.id})}">
+                <button class="btn btn-danger">drop</button>
+            </form>
         </td>
     </tr>
     </tbody>
 </table>
 
+<button class="btn btn-info" >
+    <a href="/spring-mvc-project/clients" style="color: black;">Return to clients</a>
+</button>
 <button class="btn btn-success" >
-    <a href="/spring-mvc-project/clients" style="color: black;">Create clients</a>
+    <a th:href="@{orders/new}" style="color: black;">Create order</a>
 </button>
 
 </body>

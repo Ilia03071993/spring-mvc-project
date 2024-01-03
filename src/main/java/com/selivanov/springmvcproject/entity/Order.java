@@ -18,7 +18,7 @@ public class Order {
     @Column(nullable = false)
     private Integer amount;
     private BigDecimal totalPrice; //price * amount
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 

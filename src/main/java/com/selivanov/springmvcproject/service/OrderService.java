@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 public class OrderService {
     private final OrderRepository orderRepository;
 
-    @Autowired
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
@@ -42,9 +41,12 @@ public class OrderService {
         orderRepository.saveOrder(order);
     }
     public void updateOrder(Integer id, Order order){
-        BigDecimal totalPrice = order.getPrice()
-                .multiply(BigDecimal.valueOf(order.getAmount()));
-        order.setTotalPrice(totalPrice);
         orderRepository.updateOrder(order,id);
+    }
+
+    public void removeOrder (Integer id){
+        if (id != null) {
+            orderRepository.removeOrder(id);
+        }
     }
 }

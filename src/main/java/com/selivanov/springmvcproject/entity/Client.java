@@ -22,7 +22,7 @@ public class Client {
     //    @OneToMany(cascade = CascadeType.ALL,
 //            fetch = FetchType.LAZY)
 //    @JoinColumn(name = "client_id", referencedColumnName = "id")
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 

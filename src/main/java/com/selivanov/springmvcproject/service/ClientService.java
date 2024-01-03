@@ -47,13 +47,13 @@ public class ClientService {
                 });
     }
 
-    public void updateOrderToClient(Integer clientId,Integer orderId ,Order order) {
-       if (clientId != null && orderId != null) {
-           clientRepository.getClientById(clientId)
-                   .ifPresent(client -> {
-                       orderService.updateOrder(orderId, order);
-                       client.updateOrder(orderId,order);
-                   });
-       }
-    }
+//    public void updateOrderToClient(Integer clientId,Integer orderId ,Order order) {
+//       if (clientId != null && orderId != null) {
+//           clientRepository.getClientById(clientId)
+//                   .ifPresent(client -> {
+//                       orderService.updateOrder(orderId, order);
+//                       client.updateOrder(orderId,order);
+//                   });
+//       }
+//    }
 }

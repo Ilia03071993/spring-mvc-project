@@ -27,10 +27,10 @@
         <td th:text="${order.amount}"></td>
         <td th:text="${order.totalPrice}"></td>
         <td>
-<!--            <form th:method="get" class="d-inline"-->
-<!--                  th:action="@{/clients/{clientId}/orders/{orderId}/update(clientId=${order.clientId}, orderId=${orderId})}">-->
-<!--                <button class="btn btn-warning">update</button>-->
-<!--            </form>-->
+            <form th:method="get" class="d-inline"
+                  th:action="@{/orders/{id}/edit(id=${order.id})}">
+                <button class="btn btn-warning">update</button>
+            </form>
 <!--            <form th:method="get" class="d-inline"-->
 <!--                  action="#">-->
 <!--                <button class="btn btn-danger">delete</button>-->

@@ -13,13 +13,13 @@
 <div class="container justify-content-center card col-sm-6">
     <h3 class="text-center">Order update form</h3>
 
-    <form method="post"
-          th:action="@{/clients/{clientId}/orders/{orderId}/update(clientId=${clientId},orderId=${orderId})}">
+    <form th:method="put"
+          th:action="@{/orders/{id}(id=${id})}">
         <input type="hidden" name="id" th:field="*{order.id}">
         <div class="form-group mb-3">
             <label>Product</label>
             <input type="text"
-                   th:field="*{product}"
+                   th:field="*{order.product}"
                    placeholder="Enter product"
                    class="form-control">
         </div>
@@ -27,7 +27,7 @@
         <div class="form-group mb-3 mt-3">
             <label>Price</label>
             <input type="text"
-                   th:field="*{price}"
+                   th:field="*{order.price}"
                    placeholder="Enter price"
                    class="form-control">
         </div>
@@ -35,7 +35,7 @@
         <div class="form-group mb-3 mt-3">
             <label>Amount</label>
             <input type="text"
-                   th:field="*{amount}"
+                   th:field="*{order.amount}"
                    placeholder="Enter amount"
                    class="form-control">
         </div>

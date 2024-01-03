@@ -68,21 +68,4 @@ public class ClientController {
         clientService.addOrderToClient(clientId, order);
         return "redirect:/clients/%d/orders".formatted(clientId);
     }
-
-    @GetMapping("/clients/{clientId}/orders/{orderId}/update")
-    public String getUpdateOrder(@PathVariable Integer clientId,
-                                 @PathVariable Integer orderId,
-                                 Model model) {
-        model.addAttribute("clientId", clientId);
-        model.addAttribute("orderId", orderId);
-        return "client/update_order";
-    }
-
-    @PostMapping("/clients/{clientId}/orders/{orderId}/update")
-    public String updateEmployee(@PathVariable Integer clientId,
-                                 @PathVariable Integer orderId,
-                                 @ModelAttribute Order order) {
-        clientService.updateOrderToClient(clientId,orderId,order);
-        return "redirect:/clients/%d/orders".formatted(clientId);
-    }
 }

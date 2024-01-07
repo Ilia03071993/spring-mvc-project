@@ -3,6 +3,7 @@ package com.selivanov.springmvcproject.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -10,8 +11,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false)
-    private String product;
+//    @Column(nullable = false)
+//    private String product;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -22,14 +23,27 @@ public class Order {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
-    public Order(String product, BigDecimal price, Integer amount, BigDecimal totalPrice) {
-        this.product = product;
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "products")
+    private List<Product> products;
+
+    public Order(BigDecimal price, Integer amount, BigDecimal totalPrice) {
         this.price = price;
         this.amount = amount;
         this.totalPrice = totalPrice;
     }
 
     public Order() {
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        for (Product product : products) {
+            product.getOrders().add(this);
+        }
+        this.products = products;
     }
 
     public BigDecimal getTotalPrice() {
@@ -46,14 +60,6 @@ public class Order {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
     }
 
     public BigDecimal getPrice() {

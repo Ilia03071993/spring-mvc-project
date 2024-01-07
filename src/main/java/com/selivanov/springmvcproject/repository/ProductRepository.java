@@ -1,36 +1,36 @@
 package com.selivanov.springmvcproject.repository;
 
-import com.selivanov.springmvcproject.entity.Order;
+import com.selivanov.springmvcproject.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class OrderRepository {
+public class ProductRepository {
+
     private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public OrderRepository(EntityManagerFactory entityManagerFactory) {
+    public ProductRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public List<Order> getAllOrders() {
+    public List<Product> getAllProducts() {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Order> clients = entityManager
-                    .createQuery("from Order", Order.class)
+            List<Product> products = entityManager
+                    .createQuery("from Product", Product.class)
                     .getResultList();
 
             entityManager.getTransaction().commit();
-            return clients;
+            return products;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -43,95 +43,22 @@ public class OrderRepository {
         }
     }
 
-    public Optional<Order> getOrderById(Integer id) {
+    public Optional<Product> getProductById(Integer id) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Order order = entityManager.find(Order.class, id);
-
-            entityManager.getTransaction().commit();
-            return Optional.ofNullable(order);
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
-    public void saveOrder(Order order) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            entityManager.persist(order);
-
-            entityManager.getTransaction().commit();
-
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
-    public void updateOrder(Order order, Integer id) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            Order updateOrder = entityManager.find(Order.class, id);
-
-            BigDecimal totalPrice = order.getPrice()
-                    .multiply(BigDecimal.valueOf(order.getAmount()));
-
-            if (updateOrder != null) {
-//                updateOrder.setProducts();
-                updateOrder.setPrice(order.getPrice());
-                updateOrder.setAmount(order.getAmount());
-                updateOrder.setTotalPrice(totalPrice);
-            }
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-    public List<Order> getAllProductsByOrderId(Integer orderId) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            List<Order> orders = entityManager
+            Product product = entityManager
                     .createQuery("""
-                                      select o.products from Order o where o.id = :id
-                            """, Order.class)
-                    .setParameter("id", orderId)
-                    .getResultList();
+                            select p from Product p
+                              where p.id = :id
+                            """, Product.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
 
             entityManager.getTransaction().commit();
-            return orders;
+            return Optional.ofNullable(product);
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -144,15 +71,63 @@ public class OrderRepository {
         }
     }
 
-    public void removeOrder(Integer id) {
+    public void saveProduct(Product product) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Order deleteOrder = entityManager.find(Order.class, id);
-            if (deleteOrder != null) {
-                entityManager.remove(deleteOrder);
+            if (product.getId() == null) {
+                entityManager.persist(product);
+            } else {
+                entityManager.merge(product);
+            }
+
+            entityManager.getTransaction().commit();
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+    public void updateProduct(Product product, Integer id) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            Product updateProduct = entityManager.find(Product.class, id);
+            if (updateProduct != null) {
+                updateProduct.setName(product.getName());
+                updateProduct.setCategory(product.getCategory());
+            }
+
+            entityManager.getTransaction().commit();
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+    public void removeProduct(Integer id) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            Product deleteProduct = entityManager.find(Product.class, id);
+            if (deleteProduct != null) {
+                entityManager.remove(deleteProduct);
             }
 
             entityManager.getTransaction().commit();

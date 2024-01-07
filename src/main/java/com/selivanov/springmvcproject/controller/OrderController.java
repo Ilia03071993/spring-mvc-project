@@ -2,6 +2,7 @@ package com.selivanov.springmvcproject.controller;
 
 import com.selivanov.springmvcproject.entity.Order;
 import com.selivanov.springmvcproject.service.OrderService;
+import com.selivanov.springmvcproject.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
+    private final ProductService productService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, ProductService productService) {
         this.orderService = orderService;
+        this.productService = productService;
     }
 
     @GetMapping("/orders/{id}/edit")
@@ -41,4 +44,5 @@ public class OrderController {
         }
         return "redirect:/clients";
     }
+
 }

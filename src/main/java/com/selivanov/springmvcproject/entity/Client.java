@@ -76,7 +76,6 @@ public class Client {
     public void updateOrder(Integer orderId, Order order) {
         Order update = orders.get(orderId);
         if (update != null) {
-            update.setProduct(order.getProduct());
             update.setAmount(order.getAmount());
             update.setPrice(order.getPrice());
         }

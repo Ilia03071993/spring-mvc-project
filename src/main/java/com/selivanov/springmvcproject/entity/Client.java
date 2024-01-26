@@ -1,11 +1,8 @@
 package com.selivanov.springmvcproject.entity;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -19,9 +16,10 @@ public class Client {
     @Column(nullable = false)
     private String email;
 
-    //    @OneToMany(cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY)
-//    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+    private Cart cart;
+
     @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
@@ -32,6 +30,14 @@ public class Client {
     }
 
     public Client() {
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public List<Order> getOrders() {
@@ -76,12 +82,20 @@ public class Client {
     public void updateOrder(Integer orderId, Order order) {
         Order update = orders.get(orderId);
         if (update != null) {
-            update.setAmount(order.getAmount());
-            update.setPrice(order.getPrice());
+            update.setStreet(order.getStreet());
         }
     }
 
     public void removeOrder(Order order) {
         orders.remove(order);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

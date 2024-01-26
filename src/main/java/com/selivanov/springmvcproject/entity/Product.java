@@ -2,10 +2,8 @@ package com.selivanov.springmvcproject.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity(name = "products")
+@Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,12 +13,13 @@ public class Product {
     @Column(nullable = false)
     private String category;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "products_orders",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id")
-    )
-    private List<Order> orders = new ArrayList<>();
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "cart_element_id", referencedColumnName = "id")
+    private CartElement cartElement;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "order_item_id", referencedColumnName = "id")
+    private OrderItem orderItem;
 
     public Product(String name, String category) {
         this.name = name;
@@ -30,12 +29,20 @@ public class Product {
     public Product() {
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public OrderItem getOrderItem() {
+        return orderItem;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setOrderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
+    }
+
+    public CartElement getCartElement() {
+        return cartElement;
+    }
+
+    public void setCartElement(CartElement cartElement) {
+        this.cartElement = cartElement;
     }
 
     public Integer getId() {
@@ -60,5 +67,15 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", cartElement=" + cartElement +
+                '}';
     }
 }

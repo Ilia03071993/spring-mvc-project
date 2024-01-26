@@ -5,7 +5,6 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 @Configuration
 public class WebAppInit implements WebApplicationInitializer {

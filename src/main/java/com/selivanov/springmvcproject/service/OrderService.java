@@ -28,18 +28,9 @@ public class OrderService {
     }
 
     public void saveOrder(Order order) {
-        BigDecimal totalPrice = order.getPrice()
-                .multiply(BigDecimal.valueOf(order.getAmount()));
-        order.setTotalPrice(totalPrice);
         orderRepository.saveOrder(order);
     }
 
-    public void calculateTotalPrice(Order order) {
-        BigDecimal totalPrice = order.getPrice()
-                .multiply(BigDecimal.valueOf(order.getAmount()));
-        order.setTotalPrice(totalPrice);
-        orderRepository.saveOrder(order);
-    }
     public void updateOrder(Integer id, Order order){
         orderRepository.updateOrder(order,id);
     }

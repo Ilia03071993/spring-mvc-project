@@ -2,7 +2,7 @@ package com.selivanov.springmvcproject.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,47 +11,39 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-//    @Column(nullable = false)
-//    private String product;
-
     @Column(nullable = false)
-    private BigDecimal price;
-    @Column(nullable = false)
-    private Integer amount;
-    private BigDecimal totalPrice; //price * amount
+    private String street;
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY)
+    private List<OrderItem> orderItemList = new ArrayList<>();
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "products")
-    private List<Product> products;
-
-    public Order(BigDecimal price, Integer amount, BigDecimal totalPrice) {
-        this.price = price;
-        this.amount = amount;
-        this.totalPrice = totalPrice;
+    public Order(String street) {
+        this.street = street;
     }
 
     public Order() {
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
     }
 
-    public void setProducts(List<Product> products) {
-        for (Product product : products) {
-            product.getOrders().add(this);
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        for (OrderItem orderItem : orderItemList) {
+            orderItem.setOrder(this);
         }
-        this.products = products;
+        this.orderItemList = orderItemList;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public Client getClient() {
+        return client;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Integer getId() {
@@ -62,27 +54,21 @@ public class Order {
         this.id = id;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getStreet() {
+        return street;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", orderItemList=" + orderItemList +
+                ", client=" + client +
+                '}';
     }
 }

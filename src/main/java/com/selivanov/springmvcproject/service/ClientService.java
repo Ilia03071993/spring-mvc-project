@@ -1,6 +1,7 @@
 package com.selivanov.springmvcproject.service;
 
 import com.selivanov.springmvcproject.entity.Client;
+
 import com.selivanov.springmvcproject.entity.Order;
 import com.selivanov.springmvcproject.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ public class ClientService {
     public void addOrderToClient(Integer clientId, Order order) {
         clientRepository.getClientById(clientId)
                 .ifPresent(client -> {
-                    orderService.calculateTotalPrice(order);
                     client.setOrders(List.of(order));
                     clientRepository.saveClient(client);
                 });

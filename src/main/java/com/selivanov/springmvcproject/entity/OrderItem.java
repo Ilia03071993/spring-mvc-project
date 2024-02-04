@@ -16,13 +16,14 @@ public class OrderItem {
     private Integer amount;
     @Column(nullable = false)
     private BigDecimal price;
-
     private BigDecimal totalPrice; //price * amount
-
-    @OneToMany(mappedBy = "orderItem",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Product> productList = new ArrayList<>();
+    //uni-directional
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "prodict_id", referencedColumnName = "id")
+    private Product product;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "order_id", referencedColumnName = "id")
+
     private Order order;
 
     public OrderItem(Integer amount, BigDecimal price, BigDecimal totalPrice) {
@@ -34,15 +35,12 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductList(List<Product> productList) {
-        for (Product product : productList){
-            product.setOrderItem(this);
-        }
-        this.productList = productList;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Order getOrder() {

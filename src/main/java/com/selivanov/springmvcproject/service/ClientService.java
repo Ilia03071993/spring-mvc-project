@@ -30,6 +30,10 @@ public class ClientService {
         return clientRepository.getClientById(id)
                 .orElseThrow(() -> new NoSuchElementException("Client is not found with id = '%d')".formatted(id)));
     }
+    public Client getClientByName(String name) {
+        return clientRepository.getClientByName(name)
+                .orElseThrow(() -> new NoSuchElementException("Client is not found with name = '%s')".formatted(name)));
+    }
 
     public List<Order> getAllClientOrders(Integer clientId) {
         return clientRepository.getAllOrdersByClientId(clientId);

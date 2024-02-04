@@ -1,7 +1,8 @@
 package com.selivanov.springmvcproject.repository;
 
-import com.selivanov.springmvcproject.entity.Client;
-import com.selivanov.springmvcproject.entity.Order;
+import com.selivanov.springmvcproject.entity.Cart;
+import com.selivanov.springmvcproject.entity.CartElement;
+import com.selivanov.springmvcproject.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,26 +12,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ClientRepository {
+public class CartElementRepository {
+
     private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public ClientRepository(EntityManagerFactory entityManagerFactory) {
+    public CartElementRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public List<Client> getAllClients() {
+    public List<CartElement> getAllCartElements() {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Client> clients = entityManager
-                    .createQuery("from Client", Client.class)
+            List<CartElement> cartElements = entityManager
+                    .createQuery("from CartElement ", CartElement.class)
                     .getResultList();
 
             entityManager.getTransaction().commit();
-            return clients;
+            return cartElements;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -43,23 +45,22 @@ public class ClientRepository {
         }
     }
 
-    public Optional<Client> getClientById(Integer id) {
+    public Optional<CartElement> getCartElementById(Integer id) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Client client = entityManager
+            CartElement cartElement = entityManager
                     .createQuery("""
-                            select c from Client c
-                             left join fetch c.orders
+                            select c from CartElement c
                               where c.id = :id
-                            """, Client.class)
+                            """, CartElement.class)
                     .setParameter("id", id)
                     .getSingleResult();
 
             entityManager.getTransaction().commit();
-            return Optional.ofNullable(client);
+            return Optional.ofNullable(cartElement);
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -72,45 +73,16 @@ public class ClientRepository {
         }
     }
 
-    public Optional<Client> getClientByName(String name) {
+    public void saveCartElement(CartElement cartElement) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Client client = entityManager
-                    .createQuery("""
-                            select c from Client c
-                             left join fetch c.orders
-                              where c.name = :name
-                            """, Client.class)
-                    .setParameter("name", name)
-                    .getSingleResult();
-
-            entityManager.getTransaction().commit();
-            return Optional.ofNullable(client);
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
-    public void saveClient(Client client) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            if (client.getId() == null) {
-                entityManager.persist(client);
+            if (cartElement.getId() == null) {
+                entityManager.persist(cartElement);
             } else {
-                entityManager.merge(client);
+                entityManager.merge(cartElement);
             }
 
             entityManager.getTransaction().commit();
@@ -125,22 +97,19 @@ public class ClientRepository {
             }
         }
     }
-
-    public List<Order> getAllOrdersByClientId(Integer clientId) {
+    public void updateCartElement(CartElement cartElement, Integer id) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Order> orders = entityManager
-                    .createQuery("""
-                                      select c.orders from Client c where c.id = :id
-                            """, Order.class)
-                    .setParameter("id", clientId)
-                    .getResultList();
+            CartElement updateCartElement = entityManager.find(CartElement.class, id);
+            if (updateCartElement != null) {
+                updateCartElement.setAmount(cartElement.getAmount());
+                updateCartElement.setPrice(cartElement.getPrice());
+            }
 
             entityManager.getTransaction().commit();
-            return orders;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -152,5 +121,27 @@ public class ClientRepository {
             }
         }
     }
+    public void removeCartElement(Integer id) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
 
+            CartElement cartElement = entityManager.find(CartElement.class, id);
+            if (cartElement != null) {
+                entityManager.remove(cartElement);
+            }
+
+            entityManager.getTransaction().commit();
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
 }

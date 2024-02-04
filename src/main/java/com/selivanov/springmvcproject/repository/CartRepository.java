@@ -1,7 +1,8 @@
 package com.selivanov.springmvcproject.repository;
 
-import com.selivanov.springmvcproject.entity.Client;
-import com.selivanov.springmvcproject.entity.Order;
+import com.selivanov.springmvcproject.entity.Cart;
+import
+        com.selivanov.springmvcproject.entity.CartElement;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +11,29 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
-public class ClientRepository {
+public class CartRepository {
+
     private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public ClientRepository(EntityManagerFactory entityManagerFactory) {
+    public CartRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public List<Client> getAllClients() {
+    public List<Cart> getAllCart() {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Client> clients = entityManager
-                    .createQuery("from Client", Client.class)
+            List<Cart> cartElements = entityManager
+                    .createQuery("from Cart ", Cart.class)
                     .getResultList();
 
             entityManager.getTransaction().commit();
-            return clients;
+            return cartElements;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -43,23 +46,22 @@ public class ClientRepository {
         }
     }
 
-    public Optional<Client> getClientById(Integer id) {
+    public Optional<Cart> getCartById(Integer id) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Client client = entityManager
+            Cart cart = entityManager
                     .createQuery("""
-                            select c from Client c
-                             left join fetch c.orders
+                            select c from CartElement c
                               where c.id = :id
-                            """, Client.class)
+                            """, Cart.class)
                     .setParameter("id", id)
                     .getSingleResult();
 
             entityManager.getTransaction().commit();
-            return Optional.ofNullable(client);
+            return Optional.ofNullable(cart);
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -72,45 +74,16 @@ public class ClientRepository {
         }
     }
 
-    public Optional<Client> getClientByName(String name) {
+    public void saveCart(Cart cart) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Client client = entityManager
-                    .createQuery("""
-                            select c from Client c
-                             left join fetch c.orders
-                              where c.name = :name
-                            """, Client.class)
-                    .setParameter("name", name)
-                    .getSingleResult();
-
-            entityManager.getTransaction().commit();
-            return Optional.ofNullable(client);
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
-    public void saveClient(Client client) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            if (client.getId() == null) {
-                entityManager.persist(client);
+            if (cart.getId() == null) {
+                entityManager.persist(cart);
             } else {
-                entityManager.merge(client);
+                entityManager.merge(cart);
             }
 
             entityManager.getTransaction().commit();
@@ -126,21 +99,18 @@ public class ClientRepository {
         }
     }
 
-    public List<Order> getAllOrdersByClientId(Integer clientId) {
+    public void removeCart(Integer id) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Order> orders = entityManager
-                    .createQuery("""
-                                      select c.orders from Client c where c.id = :id
-                            """, Order.class)
-                    .setParameter("id", clientId)
-                    .getResultList();
+            Cart cart = entityManager.find(Cart.class, id);
+            if (cart != null) {
+                entityManager.remove(cart);
+            }
 
             entityManager.getTransaction().commit();
-            return orders;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -152,5 +122,4 @@ public class ClientRepository {
             }
         }
     }
-
 }

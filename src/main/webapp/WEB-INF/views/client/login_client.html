@@ -11,22 +11,30 @@
 </head>
 <body>
 <div class="container justify-content-center card col-sm-6">
-    <h3 class="text-center">Order registration form</h3>
+    <h3 class="text-center">Login form</h3>
 
-    <form method="post" th:object="${order}"
-          th:action="@{/clients/{clientId}/orders(clientId=${clientId})}">
+    <form method="post" th:action="@{/clients/login}">
         <div class="form-group mb-3">
-            <label>Product</label>
+            <label>Name</label>
             <input type="text"
-                   th:field="*{order.street}"
-                   placeholder="Enter product"
-                   class="form-control">
+                   name="name"
+                   placeholder="Enter name"
+                   class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+            <label>Email</label>
+            <input type="text"
+                   name="email"
+                   placeholder="Enter email"
+                   class="form-control" required>
         </div>
 
         <div class="box-footer mb-1 mt-3">
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">login</button>
         </div>
     </form>
+    <p th:text="${error}"></p>
 </div>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package com.selivanov.springmvcproject.service;
 
+import com.selivanov.springmvcproject.entity.CartElement;
+import com.selivanov.springmvcproject.entity.Order;
 import com.selivanov.springmvcproject.entity.Product;
 import com.selivanov.springmvcproject.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

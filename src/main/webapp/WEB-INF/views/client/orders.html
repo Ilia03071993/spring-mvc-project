@@ -22,7 +22,7 @@
     </thead>
     <tbody>
     <tr th:each="order: ${orders}">
-        <td th:text="${order.name}"></td>
+        <td th:text="${order.street}"></td>
         <td>
             <form th:method="get" class="d-inline"
                   th:action="@{/orders/{id}/edit(id=${order.id})}">

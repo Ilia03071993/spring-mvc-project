@@ -16,7 +16,14 @@
     <tr>
         <th>Name</th>
         <th>Email</th>
-        <th>Orders</th>
+        <th>
+            <button>
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/new}" class="btn btn-primary" style="color: black;">Register</a>
+            </button>
+            <button>
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}" class="btn btn-primary" style="color: black;">Login</a>
+            </button>
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -24,26 +31,19 @@
         <td th:text="${client.name}"></td>
         <td th:text="${client.email}"></td>
 
-    <td>
-        <form th:method="get" class="d-inline"
-                th:action="@{/clients/{clientId}/orders(clientId=${client.id})}">
-            <button class="btn btn-primary">show</button>
-        </form>
+<!--        <td>-->
+<!--            <form th:method="get" class="d-inline"-->
+<!--                  th:action="@{/clients/{clientId}/orders(clientId=${client.id})}">-->
+<!--                <button class="btn btn-primary">show</button>-->
+<!--            </form>-->
 
-        <form th:method="get" class="d-inline"
-              th:action="@{/clients/{clientId}/orders/new(clientId=${client.id})}">
-            <button class="btn btn-success">create</button>
-        </form>
-    </td>
+<!--            <form th:method="get" class="d-inline"-->
+<!--                  th:action="@{/clients/{clientId}/orders/new(clientId=${client.id})}">-->
+<!--                <button class="btn btn-success">create</button>-->
+<!--            </form>-->
+<!--        </td>-->
     </tr>
     </tbody>
 </table>
-
-<div>
-        <button class="btn btn-success" >
-            <a href="clients/new" style="color: black;">Create clients</a>
-        </button>
-
-</div>
 </body>
 </html>

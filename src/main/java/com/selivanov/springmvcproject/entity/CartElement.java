@@ -16,10 +16,11 @@ public class CartElement {
     private Integer amount;
     @Column(nullable = false)
     private BigDecimal price;
-
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    //uni-directional
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY)
-    private List<Product> productList = new ArrayList<>();
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
@@ -33,15 +34,12 @@ public class CartElement {
     public CartElement() {
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductList(List<Product> productList) {
-        for (Product product : productList) {
-            product.setCartElement(this);
-        }
-        this.productList = productList;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Cart getCart() {

@@ -1,16 +1,13 @@
 package com.selivanov.springmvcproject.controller;
 
 import com.selivanov.springmvcproject.entity.CartElement;
-import com.selivanov.springmvcproject.repository.CartRepository;
 import com.selivanov.springmvcproject.service.CartElementService;
 import com.selivanov.springmvcproject.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @Controller
@@ -43,13 +40,4 @@ public class CartController {
         return "client/cart";
     }
 
-//    @PostMapping("/clients/{name}/add-cart-element/{product_id}")
-//    public String cartClients(@PathVariable String name,
-//                             CartElement cartElement,
-//                             @PathVariable Integer product_id,
-//                             Model model) {
-//        cartService.addElementToCart(name, cartElement, product_id);
-//        model.addAttribute("cartElement", cartElement);
-//        return "redirect:client/cart_element";
-//    }
 }

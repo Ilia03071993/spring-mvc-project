@@ -54,10 +54,9 @@ public class CartRepository {
             List<CartElement> cartElements = entityManager
                     .createQuery("""
                             select ce from CartElement ce
-                            left join fetch Product p on ce.cart.id = p.id
-                            left join fetch Cart c on ce.cart.id = c.id
-                            left join fetch Client cl on cl.cart.id = c.id
-                            where cl.name = :name
+                            left join fetch ce.product cep
+                            left join ce.cart cec
+                            where cec.client.name = :name
                             """, CartElement.class)
                     .setParameter("name",name)
                     .getResultList();

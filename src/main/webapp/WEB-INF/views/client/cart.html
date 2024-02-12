@@ -25,6 +25,7 @@
         <th>Category</th>
         <th>Price</th>
         <th>Amount</th>
+        <th>Cart_Id</th>
     </tr>
     </thead>
     <tbody>
@@ -33,6 +34,7 @@
         <td th:text="${cartElement.product.category}"></td>
         <td th:text="${cartElement.price}"></td>
         <td th:text="${cartElement.amount}"></td>
+        <td th:text="${cartElement.cart.id}"></td>
     </tr>
     </tbody>
 </table>

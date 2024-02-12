@@ -105,6 +105,7 @@ public class ProductRepository {
             if (updateProduct != null) {
                 updateProduct.setName(product.getName());
                 updateProduct.setCategory(product.getCategory());
+                updateProduct.setPrice(product.getPrice());
             }
 
             entityManager.getTransaction().commit();

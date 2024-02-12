@@ -100,6 +100,35 @@ public class ClientRepository {
             }
         }
     }
+    public Optional<Client> getClientWithCart(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            Client client = entityManager
+                    .createQuery("""
+                            select c from Client c
+                             left join fetch c.cart
+                             left join fetch c.cart.cartElementList
+                              where c.name = :name
+                            """, Client.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+
+            entityManager.getTransaction().commit();
+            return Optional.ofNullable(client);
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
 
     public void saveClient(Client client) {
         EntityManager entityManager = null;

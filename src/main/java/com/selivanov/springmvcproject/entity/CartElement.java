@@ -14,7 +14,7 @@ public class CartElement {
     private Integer id;
     @Column(nullable = false)
     private Integer amount;
-    @Column(nullable = false)
+        @Column(nullable = false)
     private BigDecimal price;
     //uni-directional
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE},

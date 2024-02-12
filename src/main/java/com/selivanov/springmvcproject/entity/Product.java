@@ -2,6 +2,7 @@ package com.selivanov.springmvcproject.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,13 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private String category;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    public Product(String name, String category) {
+    public Product(String name, String category, BigDecimal price) {
         this.name = name;
         this.category = category;
+        this.price = price;
     }
 
     public Product() {
@@ -46,6 +50,14 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override

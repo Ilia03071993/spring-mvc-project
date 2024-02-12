@@ -30,22 +30,17 @@ public class ClientController {
         model.addAttribute("clients", allClients);
         return "client/clients";
     }
+
+    @GetMapping("/clients/register")
+    public String createNewClient(Model model) {
+        model.addAttribute("client", new Client());
+        return "client/register_client";
+    }
+
     @PostMapping("/clients")
     public String createNewClient(@ModelAttribute Client client) {
         clientService.saveClient(client);
-        return "redirect:/clients";
-    }
-    @GetMapping("/clients/{clientId}")
-    public String getClientById(@PathVariable Integer clientId, Model model) {
-        Client clientById = clientService.getClientById(clientId);
-        model.addAttribute("clients", List.of(clientById));
-        return "client/clients";
-    }
-
-    @GetMapping("/clients/new")
-    public String createNewClient(Model model) {
-        model.addAttribute("client", new Client());
-        return "client/new_client";
+        return "redirect:/clients/login";
     }
 
     @GetMapping("/clients/login")
@@ -67,8 +62,17 @@ public class ClientController {
         }
     }
 
+    @GetMapping("/clients/{clientId}")
+    public String getClientById(@PathVariable Integer clientId, Model model) {
+        Client clientById = clientService.getClientById(clientId);
+        model.addAttribute("clients", List.of(clientById));
+        return "client/clients";
+    }
+
+
     @GetMapping("/clients/{name}/shop")
-    public String shopClient(@PathVariable String name, Model model) {
+    public String shopClient(@PathVariable String name,
+                             Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "client/shop";

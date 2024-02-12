@@ -1,5 +1,6 @@
 package com.selivanov.springmvcproject.service;
 
+import com.selivanov.springmvcproject.entity.Cart;
 import com.selivanov.springmvcproject.entity.Client;
 
 import com.selivanov.springmvcproject.entity.Order;
@@ -35,11 +36,17 @@ public class ClientService {
                 .orElseThrow(() -> new NoSuchElementException("Client is not found with name = '%s')".formatted(name)));
     }
 
+    public Client getClientWithCart(String name) {
+        return clientRepository.getClientWithCart(name)
+                .orElseThrow(() -> new NoSuchElementException("Client is not found with name = '%s')".formatted(name)));
+    }
+
     public List<Order> getAllClientOrders(Integer clientId) {
         return clientRepository.getAllOrdersByClientId(clientId);
     }
 
     public void saveClient(Client client) {
+        client.setCart(new Cart());
         clientRepository.saveClient(client);
     }
 

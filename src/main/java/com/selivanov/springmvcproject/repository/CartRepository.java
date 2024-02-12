@@ -45,7 +45,36 @@ public class CartRepository {
             }
         }
     }
+    public List<CartElement> getAllCartElementsByClientName(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
 
+            List<CartElement> cartElements = entityManager
+                    .createQuery("""
+                            select ce from CartElement ce
+                            left join fetch Product p on ce.cart.id = p.id
+                            left join fetch Cart c on ce.cart.id = c.id
+                            left join fetch Client cl on cl.cart.id = c.id
+                            where cl.name = :name
+                            """, CartElement.class)
+                    .setParameter("name",name)
+                    .getResultList();
+
+            entityManager.getTransaction().commit();
+            return cartElements;
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
     public Optional<Cart> getCartById(Integer id) {
         EntityManager entityManager = null;
         try {

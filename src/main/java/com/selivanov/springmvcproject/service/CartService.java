@@ -3,29 +3,30 @@ package com.selivanov.springmvcproject.service;
 import com.selivanov.springmvcproject.entity.Cart;
 import com.selivanov.springmvcproject.entity.CartElement;
 import com.selivanov.springmvcproject.entity.Client;
+import com.selivanov.springmvcproject.entity.Product;
 import com.selivanov.springmvcproject.repository.CartElementRepository;
 import com.selivanov.springmvcproject.repository.CartRepository;
 import com.selivanov.springmvcproject.repository.ClientRepository;
-import com.selivanov.springmvcproject.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 public class CartService {
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
-    private final ClientRepository clientRepository;
-    private final CartElementRepository cartElementRepository;
+    private final ClientService clientService;
+    private final ProductService productService;
+    private final CartElementService cartElementService;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, ClientRepository clientRepository, CartElementRepository cartElementRepository) {
+    public CartService(CartRepository cartRepository, ClientService clientService, ProductService productService, CartElementService cartElementService) {
         this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
-        this.clientRepository = clientRepository;
-        this.cartElementRepository = cartElementRepository;
+        this.clientService = clientService;
+        this.productService = productService;
+        this.cartElementService = cartElementService;
     }
 
     public List<Cart> getAllCart() {
@@ -45,17 +46,21 @@ public class CartService {
         this.cartRepository.removeCart(id);
     }
 
-    public void addElementToCart(String name, CartElement cartElement) {
-        Client client = clientRepository.getClientByName(name).orElseThrow(() -> new NoSuchElementException(
-                "Client with name = '%s' not found".formatted(name)));
+    public void addElementToCart(String name, CartElement cartElement, Integer productId) {
+        Client client = clientService.getClientWithCart(name);
+
         Cart cart = client.getCart();
-        if (cart == null) {
-            cart = new Cart();
-            cart.setClient(client);
-            cartRepository.saveCart(cart);
-        }
-        cartElement.setCart(cart);
-        cartElementRepository.saveCartElement(cartElement);
+        cart.addCartElement(cartElement);
+
+        Product product = productService.getProduct(productId);
+        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(cartElement.getAmount()));
+        cartElement.setPrice(totalPrice);
+        cartElement.setProduct(product);
+
+        cartRepository.saveCart(cart);
     }
 
+    public List<CartElement> getAllCartElementsByClientName(String name) {
+        return cartRepository.getAllCartElementsByClientName(name);
+    }
 }

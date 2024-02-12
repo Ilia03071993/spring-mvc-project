@@ -47,6 +47,11 @@ public class Cart {
         this.cartElementList = cartElementList;
     }
 
+    public void addCartElement(CartElement cartElement) {
+        cartElement.setCart(this);
+        cartElementList.add(cartElement);
+    }
+
     @Override
     public String toString() {
         return "Cart{" +
@@ -55,4 +60,6 @@ public class Cart {
                 ", cartElementList=" + cartElementList +
                 '}';
     }
+
+
 }

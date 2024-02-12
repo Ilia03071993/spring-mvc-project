@@ -1,7 +1,6 @@
 package com.selivanov.springmvcproject.service;
 
 import com.selivanov.springmvcproject.entity.CartElement;
-import com.selivanov.springmvcproject.entity.Order;
 import com.selivanov.springmvcproject.repository.CartElementRepository;
 import com.selivanov.springmvcproject.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,11 @@ public class CartElementService {
         this.cartElementRepository = cartElementRepository;
         this.productRepository = productRepository;
     }
+
+//    public List<CartElement> getAllCartElementsByCart(Integer id) {
+//        return cartElementRepository.getAllCartElementsByCartId(id);
+//
+//    }
 
     public List<CartElement> getAllCartElements() {
         return cartElementRepository.getAllCartElements();

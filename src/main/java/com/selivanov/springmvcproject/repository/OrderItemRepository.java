@@ -124,7 +124,7 @@ public class OrderItemRepository {
 
             List<OrderItem> orders = entityManager
                     .createQuery("""
-                                      select o.products from OrderItem o where o.id = :id
+                                      select o.product from OrderItem o where o.id = :id
                             """, OrderItem.class)
                     .setParameter("id", orderId)
                     .getResultList();

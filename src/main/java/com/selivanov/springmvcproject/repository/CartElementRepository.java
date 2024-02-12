@@ -2,7 +2,6 @@ package com.selivanov.springmvcproject.repository;
 
 import com.selivanov.springmvcproject.entity.Cart;
 import com.selivanov.springmvcproject.entity.CartElement;
-import com.selivanov.springmvcproject.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,36 @@ public class CartElementRepository {
 
             List<CartElement> cartElements = entityManager
                     .createQuery("from CartElement ", CartElement.class)
+                    .getResultList();
+
+            entityManager.getTransaction().commit();
+            return cartElements;
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    public List<CartElement> getAllCartElementsByClientName(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            List<CartElement> cartElements = entityManager
+                    .createQuery("""
+                            select ce from CartElement ce
+                            left join fetch ce.cart c
+                            left join fetch c.client cl
+                            where cl.name = :name
+                            """, CartElement.class)
+                    .setParameter("name", name)
                     .getResultList();
 
             entityManager.getTransaction().commit();
@@ -97,6 +126,7 @@ public class CartElementRepository {
             }
         }
     }
+
     public void updateCartElement(CartElement cartElement, Integer id) {
         EntityManager entityManager = null;
         try {
@@ -121,6 +151,7 @@ public class CartElementRepository {
             }
         }
     }
+
     public void removeCartElement(Integer id) {
         EntityManager entityManager = null;
         try {

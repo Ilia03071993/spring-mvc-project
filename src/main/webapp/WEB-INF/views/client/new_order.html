@@ -14,7 +14,7 @@
     <h3 class="text-center">Order registration form</h3>
 
     <form method="post" th:object="${order}"
-          th:action="@{/clients/{clientId}/orders(clientId=${clientId})}">
+          th:action="@{/clients/{name}/orders(clientId=${name})}">
         <div class="form-group mb-3">
             <label>Product</label>
             <input type="text"

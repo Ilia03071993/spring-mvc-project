@@ -129,7 +129,35 @@ public class ClientRepository {
             }
         }
     }
+    public Optional<Client> getClientWithOrder(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
 
+            Client client = entityManager
+                    .createQuery("""
+                            select c from Client c
+                             left join fetch c.orders
+                             left join fetch c.o
+                              where c.name = :name
+                            """, Client.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+
+            entityManager.getTransaction().commit();
+            return Optional.ofNullable(client);
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
     public void saveClient(Client client) {
         EntityManager entityManager = null;
         try {
@@ -155,7 +183,7 @@ public class ClientRepository {
         }
     }
 
-    public List<Order> getAllOrdersByClientId(Integer clientId) {
+    public List<Order> getAllOrdersByClientName(String name) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -163,9 +191,9 @@ public class ClientRepository {
 
             List<Order> orders = entityManager
                     .createQuery("""
-                                      select c.orders from Client c where c.id = :id
+                                      select c.orders from Client c where c.name = :name
                             """, Order.class)
-                    .setParameter("id", clientId)
+                    .setParameter("name", name)
                     .getResultList();
 
             entityManager.getTransaction().commit();
@@ -181,5 +209,30 @@ public class ClientRepository {
             }
         }
     }
-
+// public List<Order> getAllOrdersByClientId(Integer clientId) {
+//        EntityManager entityManager = null;
+//        try {
+//            entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
+//
+//            List<Order> orders = entityManager
+//                    .createQuery("""
+//                                      select c.orders from Client c where c.id = :id
+//                            """, Order.class)
+//                    .setParameter("id", clientId)
+//                    .getResultList();
+//
+//            entityManager.getTransaction().commit();
+//            return orders;
+//        } catch (Exception ex) {
+//            if (entityManager != null) {
+//                entityManager.getTransaction().rollback();
+//            }
+//            throw new RuntimeException(ex);
+//        } finally {
+//            if (entityManager != null) {
+//                entityManager.close();
+//            }
+//        }
+//    }
 }

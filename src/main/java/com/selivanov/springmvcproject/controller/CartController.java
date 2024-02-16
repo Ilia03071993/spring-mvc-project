@@ -1,5 +1,6 @@
 package com.selivanov.springmvcproject.controller;
 
+import com.selivanov.springmvcproject.entity.Cart;
 import com.selivanov.springmvcproject.entity.CartElement;
 import com.selivanov.springmvcproject.service.CartElementService;
 import com.selivanov.springmvcproject.service.CartService;
@@ -35,8 +36,12 @@ public class CartController {
     @GetMapping("/clients/{name}/cart")
     public String cartClient(@PathVariable String name,
                              Model model) {
+        Cart cart = cartService.getCartIdByClientName(name); //
         List<CartElement> cartElements = cartService.getAllCartElementsByClientName(name);
+
+        model.addAttribute("id", cart.getId());
         model.addAttribute("cartElements", cartElements);
+
         return "client/cart";
     }
 

@@ -101,7 +101,63 @@ public class CartRepository {
             }
         }
     }
+    public Optional<Cart> getCartIdByClientName(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
 
+            Cart cart = entityManager
+                    .createQuery("""
+                            select c.id from Cart c
+                            left join c.client cl
+                            where cl.name = :name
+                            """, Cart.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+
+            entityManager.getTransaction().commit();
+            return Optional.ofNullable(cart);
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+//    public Integer getCartIdByClientName(String name) {
+//        EntityManager entityManager = null;
+//        try {
+//            entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
+//
+//            Integer id = entityManager
+//                    .createQuery("""
+//                            select c.id from Cart c
+//                            left join c.client cl
+//                            where cl.name = :name
+//                            """, Cart.class)
+//                    .setParameter("name", name)
+//                    .getSingleResult().getId();
+//
+//            entityManager.getTransaction().commit();
+//            return id;
+//        } catch (Exception ex) {
+//            if (entityManager != null) {
+//                entityManager.getTransaction().rollback();
+//            }
+//            throw new RuntimeException(ex);
+//        } finally {
+//            if (entityManager != null) {
+//                entityManager.close();
+//            }
+//        }
+//    }
     public void saveCart(Cart cart) {
         EntityManager entityManager = null;
         try {

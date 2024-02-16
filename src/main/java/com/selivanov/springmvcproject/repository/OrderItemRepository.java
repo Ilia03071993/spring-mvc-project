@@ -71,6 +71,7 @@ public class OrderItemRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
+
             entityManager.persist(orderItem);
 
             entityManager.getTransaction().commit();

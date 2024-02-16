@@ -1,6 +1,6 @@
 package com.selivanov.springmvcproject.service;
 
-import com.selivanov.springmvcproject.entity.Order;
+import com.selivanov.springmvcproject.entity.*;
 import com.selivanov.springmvcproject.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,4 +40,5 @@ public class OrderService {
             orderRepository.removeOrder(id);
         }
     }
+
 }

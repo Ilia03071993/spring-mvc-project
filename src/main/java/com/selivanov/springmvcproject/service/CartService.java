@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -62,5 +63,10 @@ public class CartService {
 
     public List<CartElement> getAllCartElementsByClientName(String name) {
         return cartRepository.getAllCartElementsByClientName(name);
+    }
+
+    public Cart getCartIdByClientName(String name) {
+        return cartRepository.getCartIdByClientName(name).orElseThrow(() -> new NoSuchElementException(
+                "Cart with client name = '%s' not found".formatted(name)));
     }
 }

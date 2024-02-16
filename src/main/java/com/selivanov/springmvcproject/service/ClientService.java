@@ -41,17 +41,20 @@ public class ClientService {
                 .orElseThrow(() -> new NoSuchElementException("Client is not found with name = '%s')".formatted(name)));
     }
 
-    public List<Order> getAllClientOrders(Integer clientId) {
-        return clientRepository.getAllOrdersByClientId(clientId);
+    public List<Order> getAllClientOrders(String name) {
+        return clientRepository.getAllOrdersByClientName(name);
     }
+//    public List<Order> getAllClientOrders(Integer clientId) {
+//        return clientRepository.getAllOrdersByClientId(clientId);
+//    }
 
     public void saveClient(Client client) {
         client.setCart(new Cart());
         clientRepository.saveClient(client);
     }
 
-    public void addOrderToClient(Integer clientId, Order order) {
-        clientRepository.getClientById(clientId)
+    public void addOrderToClient(String name, Order order) {
+        clientRepository.getClientByName(name)
                 .ifPresent(client -> {
                     client.setOrders(List.of(order));
                     clientRepository.saveClient(client);

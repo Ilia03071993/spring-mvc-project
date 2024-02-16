@@ -78,34 +78,25 @@ public class ClientController {
         return "client/shop";
     }
 
-//    @GetMapping("/clients/{name}/cart-element")
-//    public String cartClient(@PathVariable String name, Integer productId, CartElement cartElement, Model model) {
-//        if (productId != null) {
-//            cartElementService.addProductToCartElement(productId, cartElement);
-//        }
-//        model.addAttribute("productId", productId);
-//        model.addAttribute("cartElement", new CartElement());
-//        return "client/cart_element";
-//    }
 
-    @GetMapping("/clients/{clientId}/orders")
-    public String getClientOrders(@PathVariable Integer clientId, Model model) {
-        List<Order> orders = clientService.getAllClientOrders(clientId);
+    @GetMapping("/clients/{name}/orders")
+    public String getClientOrders(@PathVariable String name, Model model) {
+        List<Order> orders = clientService.getAllClientOrders(name);
         model.addAttribute("orders", orders);
         return "client/orders";
     }
 
-    @GetMapping("/clients/{clientId}/orders/new")
-    public String getNewOrder(@PathVariable Integer clientId, Model model) {
-        model.addAttribute("clientId", clientId);
+    @GetMapping("/clients/{name}/orders/new")
+    public String getNewOrder(@PathVariable String name, Model model) {
+        model.addAttribute("name", name);
         model.addAttribute("order", new Order());
         return "client/new_order";
     }
 
-    @PostMapping("/clients/{clientId}/orders")
-    public String addOrderToClient(@PathVariable Integer clientId,
+    @PostMapping("/clients/{name}/orders")
+    public String addOrderToClient(@PathVariable String name,
                                    @ModelAttribute Order order) {
-        clientService.addOrderToClient(clientId, order);
-        return "redirect:/clients/%d/orders".formatted(clientId);
+        clientService.addOrderToClient(name, order);
+        return "redirect:/clients/%s/orders".formatted(name);
     }
 }

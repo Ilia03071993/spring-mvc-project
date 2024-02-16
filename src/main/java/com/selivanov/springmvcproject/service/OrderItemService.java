@@ -16,11 +16,11 @@ public class OrderItemService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public List<OrderItem> getAllOrders() {
+    public List<OrderItem> getAllOrderItems() {
         return orderItemRepository.getAllOrderItems();
     }
 
-    public OrderItem getOrderById(Integer id) {
+    public OrderItem getOrderItemById(Integer id) {
         return orderItemRepository.getOrderItemById(id)
                 .orElseThrow(() -> new NoSuchElementException(
                         "OrderItem with id = '%d' not found".formatted(id)));

@@ -1,7 +1,6 @@
 package com.selivanov.springmvcproject.controller;
 
 import com.selivanov.springmvcproject.entity.CartElement;
-import com.selivanov.springmvcproject.entity.Client;
 import com.selivanov.springmvcproject.entity.Order;
 import com.selivanov.springmvcproject.entity.OrderItem;
 import com.selivanov.springmvcproject.service.*;
@@ -32,15 +31,17 @@ public class OrderController {
         this.cartService = cartService;
         this.clientService = clientService;
     }
-        @GetMapping("/clients/{name}/orders")
+
+    @GetMapping("/clients/{name}/orders")
     public String getOrders(@PathVariable String name,
-                                      Model model) {
-            List<Order> orders = orderService.getOrdersByClientName(name);
-            BigDecimal totalPrice = orderItemService.totalPriceItems(name);
-            model.addAttribute("totalPrice", totalPrice);
-            model.addAttribute("orders", orders);
-            return "client/orders";
+                            Model model) {
+        List<Order> orders = orderService.getOrdersByClientName(name);
+        BigDecimal totalPrice = orderItemService.totalPriceItems(name);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("orders", orders);
+        return "client/orders";
     }
+
     @PostMapping("/clients/{name}/orders")
     public String createOrderFromCart(@PathVariable String name,
                                       @ModelAttribute OrderItem orderItem,
@@ -48,7 +49,7 @@ public class OrderController {
         List<CartElement> cartElements = cartService.getAllCartElementsByClientName(name);
         Order ord = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
-        for (CartElement cartElement : cartElements){
+        for (CartElement cartElement : cartElements) {
             OrderItem item = new OrderItem();
             item.setOrder(ord);
             item.setPrice(cartElement.getPrice());
@@ -65,6 +66,16 @@ public class OrderController {
 
         return "redirect:/clients/%s/orders".formatted(name);
     }
+
+    @DeleteMapping("/clients/{name}/orders/{id}")
+    public String removeOrder(@PathVariable String name, @PathVariable Integer id) {
+        if (id != null) {
+            orderService.removeOrder(id);
+        }
+        return "redirect:/clients/%s/orders".formatted(name);
+    }
+
+}
 //--
 //    @GetMapping("/orders/{id}/edit")
 //    public String getUpdateOrder(@PathVariable Integer id, Model model) {
@@ -91,4 +102,3 @@ public class OrderController {
 //        return "redirect:/clients";
 //    }
 
-}

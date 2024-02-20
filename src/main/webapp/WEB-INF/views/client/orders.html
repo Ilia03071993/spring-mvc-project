@@ -14,8 +14,12 @@
 <header>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid d-flex justify-content-start">
-            <button class="btn btn-primary me-2" type="submit"><a class="navbar-brand" th:href="@{/clients/{name}/cart(name=${name})}">Cart</a></button>
-            <button class="btn btn-primary" type="submit"><a class="navbar-brand" th:href="@{/clients/{name}/shop(name=${name})}">Shop</a></button>
+            <button class="btn btn-primary me-2" type="submit"><a class="navbar-brand"
+                                                                  th:href="@{/clients/{name}/cart(name=${name})}">Cart</a>
+            </button>
+            <button class="btn btn-primary" type="submit"><a class="navbar-brand"
+                                                             th:href="@{/clients/{name}/shop(name=${name})}">Shop</a>
+            </button>
         </div>
     </nav>
 </header>
@@ -27,34 +31,41 @@
         <th>Product
             <table class="product-table">
                 <tr>
-                    <th width="25%">Name</th>
-                    <th width="25%">Category</th>
-                    <th width="25%">Price</th>
-                    <th width="25%">Amount</th>
+                    <th width="15%">Name</th>
+                    <th width="15%">Category</th>
+                    <th width="15%">Price</th>
+                    <th width="15%">Amount</th>
                 </tr>
             </table>
         </th>
+        <th>Function</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="order : ${orders}">
         <td th:text="${order.id}"></td>
-        <td colspan="4">
-            <table>
+        <td>
+            <table class="product-table">
                 <tr th:each="orderItem : ${order.orderItemList}">
-                    <td width="25%" th:text="${orderItem.product.name}"></td>
-                    <td width="25%" th:text="${orderItem.product.category}"></td>
-                    <td width="25%" th:text="${orderItem.price}"></td>
-                    <td width="25%" th:text="${orderItem.amount}"></td>
+                    <td width="15%" th:text="${orderItem.product.name}"></td>
+                    <td width="15%" th:text="${orderItem.product.category}"></td>
+                    <td width="15%" th:text="${orderItem.price}"></td>
+                    <td width="15%" th:text="${orderItem.amount}"></td>
                 </tr>
             </table>
+        </td>
+        <td>
+            <form th:method="delete" class="d-inline"
+                  th:action="@{/clients/{name}/orders/{id}(name=${order.client.name}, id=${order.id})}">
+                <button class="btn btn-danger">Drop</button>
+            </form>
         </td>
     </tr>
     </tbody>
 </table>
 
 <div>
-    <p>Total Price: <span th:text="${totalPrice}"></span></p>
+    <p><span style="font-weight: bold;">Total Price:</span> <span th:text="${totalPrice}"></span></p>
     <form th:method="get" class="d-inline">
         <button class="btn btn-success">Complete</button>
     </form>

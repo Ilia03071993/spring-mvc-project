@@ -117,6 +117,7 @@ public class OrderItemRepository {
             }
         }
     }
+
     public List<OrderItem> getAllProductsByOrderItemId(Integer orderId) {
         EntityManager entityManager = null;
         try {
@@ -132,6 +133,36 @@ public class OrderItemRepository {
 
             entityManager.getTransaction().commit();
             return orders;
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    public BigDecimal totalPrice(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            BigDecimal totalPrice = entityManager
+                    .createQuery("""
+                                      select sum(o.price) from OrderItem o
+                                      left join o.order or
+                                      left join or.client c
+                                      where c.name = :name
+                            """, BigDecimal.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+
+            entityManager.getTransaction().commit();
+            return totalPrice;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();

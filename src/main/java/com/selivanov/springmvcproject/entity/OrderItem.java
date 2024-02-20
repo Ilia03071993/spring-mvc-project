@@ -18,7 +18,7 @@ public class OrderItem {
     private BigDecimal price;
     private BigDecimal totalPrice; //price * amount
     //uni-directional
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

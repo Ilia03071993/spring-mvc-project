@@ -33,11 +33,15 @@ public class OrderItemService {
         orderItemRepository.saveOrderItem(orderItem);
     }
 
-    public void calculateTotalPrice(OrderItem orderItem) {
-        BigDecimal totalPrice = orderItem.getPrice()
-                .multiply(BigDecimal.valueOf(orderItem.getAmount()));
-        orderItem.setTotalPrice(totalPrice);
-        orderItemRepository.saveOrderItem(orderItem);
+//    public void calculateTotalPrice(OrderItem orderItem) {
+//        BigDecimal totalPrice = orderItem.getPrice()
+//                .multiply(BigDecimal.valueOf(orderItem.getAmount()));
+//        orderItem.setTotalPrice(totalPrice);
+//        orderItemRepository.saveOrderItem(orderItem);
+//    }
+
+    public BigDecimal totalPriceItems(String name) {
+        return orderItemRepository.totalPrice(name);
     }
 
     public void updateOrderItem(Integer id, OrderItem orderItem) {

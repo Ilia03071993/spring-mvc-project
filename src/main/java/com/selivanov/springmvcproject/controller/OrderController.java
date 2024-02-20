@@ -35,7 +35,11 @@ public class OrderController {
         @GetMapping("/clients/{name}/orders")
     public String getOrders(@PathVariable String name,
                                       Model model) {
-        return "client/orders";
+            List<Order> orders = orderService.getOrdersByClientName(name);
+            BigDecimal totalPrice = orderItemService.totalPriceItems(name);
+            model.addAttribute("totalPrice", totalPrice);
+            model.addAttribute("orders", orders);
+            return "client/orders";
     }
     @PostMapping("/clients/{name}/orders")
     public String createOrderFromCart(@PathVariable String name,
@@ -53,7 +57,7 @@ public class OrderController {
             item.setTotalPrice(cartElement.getPrice().multiply(BigDecimal.valueOf(cartElement.getAmount())));
             orderItems.add(item);
         }
-
+        ord.setClient(clientService.getClientByName(name));
         ord.setOrderItemList(orderItems);
         orderService.saveOrder(ord);
 

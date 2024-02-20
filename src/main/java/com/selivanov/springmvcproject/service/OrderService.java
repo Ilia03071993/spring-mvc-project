@@ -27,6 +27,10 @@ public class OrderService {
                         "Order with id = '%d' not found".formatted(id)));
     }
 
+    public List<Order> getOrdersByClientName(String name){
+        return orderRepository.getAllOrdersByClientName(name);
+    }
+
     public void saveOrder(Order order) {
         orderRepository.saveOrder(order);
     }

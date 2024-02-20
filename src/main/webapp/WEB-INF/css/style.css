@@ -22,3 +22,28 @@ html, body{
 .footer{
 
 }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: lightgray;
+}
+
+.product-table {
+    width: 100%;
+}
+
+.product-table th, .product-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}

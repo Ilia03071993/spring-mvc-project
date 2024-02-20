@@ -18,18 +18,48 @@ public class OrderRepository {
         this.entityManagerFactory = entityManagerFactory;
     }
 
+    public List<Order> getAllOrdersByClientName(String name) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            List<Order> orders = entityManager
+                    .createQuery("""
+                            from Order o
+                            left join fetch o.client c
+                            left join fetch o.orderItemList
+                            where c.name = :name
+                                    """, Order.class)
+                    .setParameter("name", name)
+                    .getResultList();
+
+            entityManager.getTransaction().commit();
+            return orders;
+        } catch (Exception ex) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException(ex);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
     public List<Order> getAllOrders() {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            List<Order> clients = entityManager
+            List<Order> orders = entityManager
                     .createQuery("from Order", Order.class)
                     .getResultList();
 
             entityManager.getTransaction().commit();
-            return clients;
+            return orders;
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();

@@ -12,8 +12,9 @@
 
 <header>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-        <div class="container-fluid">
-            <button class="btn btn-primary" type="submit">  <a class="navbar-brand" th:href="@{/clients/{name}/cart(name=${name})}">Cart</a></button>
+        <div class="container-fluid d-flex justify-content-start">
+            <button class="btn btn-primary me-2" type="submit"><a class="navbar-brand" th:href="@{/clients/{name}/cart(name=${name})}">Cart</a></button>
+            <button class="btn btn-primary" type="submit"><a class="navbar-brand" th:href="@{/clients/{name}/orders(name=${name})}">My order</a></button>
         </div>
     </nav>
 </header>

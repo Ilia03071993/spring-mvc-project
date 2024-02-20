@@ -36,10 +36,10 @@ public class CartController {
     @GetMapping("/clients/{name}/cart")
     public String cartClient(@PathVariable String name,
                              Model model) {
-        Cart cart = cartService.getCartIdByClientName(name); //
+        Integer cartId = cartService.getCartIdByClientName(name); //
         List<CartElement> cartElements = cartService.getAllCartElementsByClientName(name);
 
-        model.addAttribute("id", cart.getId());
+        model.addAttribute("id", cartId);
         model.addAttribute("cartElements", cartElements);
 
         return "client/cart";

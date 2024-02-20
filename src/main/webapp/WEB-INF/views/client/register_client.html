@@ -9,31 +9,47 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
+
 <body>
-<div class="container justify-content-center card col-sm-6">
-    <h3 class="text-center">Client registration form</h3>
-
-    <form method="post" th:object="${client}" th:action="@{/clients}">
-        <div class="form-group mb-3">
-            <label>Name</label>
-            <input type="text"
-                   th:field="*{name}"
-                   placeholder="Enter name"
-                   class="form-control">
+<div class="wrapper">
+    <header class="head">
+        <div class="text-center" style="background-color:cornflowerblue;">
+            <h3> Client registration form</h3>
         </div>
+    </header>
 
-        <div class="form-group mb-3 mt-3">
-            <label>Email</label>
-            <input type="text"
-                   th:field="*{email}"
-                   placeholder="Enter email"
-                   class="form-control">
-        </div>
+    <main class="main">
+        <div class="container justify-content-center card col-sm-6">
+            <form method="post" th:object="${client}" th:action="@{/clients}">
+                <div class="form-group mb-3">
+                    <label>Name</label>
+                    <input type="text"
+                           th:field="*{name}"
+                           placeholder="Enter name"
+                           class="form-control">
+                </div>
 
-        <div class="box-footer mb-1 mt-3">
-            <button type="submit" class="btn btn-primary">Create</button>
+                <div class="form-group mb-3 mt-3">
+                    <label>Email</label>
+                    <input type="text"
+                           th:field="*{email}"
+                           placeholder="Enter email"
+                           class="form-control">
+                </div>
+
+                <div class="box-footer mb-1 mt-3">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </main>
+
+    <footer class="footer">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2024 Company
+        </div>
+    </footer>
+
 </div>
 </body>
 </html>

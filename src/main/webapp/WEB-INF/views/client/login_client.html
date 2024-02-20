@@ -10,9 +10,15 @@
     <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
-<div class="container justify-content-center card col-sm-6">
-    <h3 class="text-center">Login form</h3>
+<div class="wrapper">
+<header role="banner">
+    <div class="text-center" style="background-color:cornflowerblue;">
+        <h3>  Login form</h3>
+    </div>
+</header>
 
+<main role="main">
+<div class="container justify-content-center card col-sm-6">
     <form method="post" th:action="@{/clients/login}">
         <div class="form-group mb-3">
             <label>Name</label>
@@ -35,6 +41,14 @@
         </div>
     </form>
     <p th:text="${error}"></p>
+</div>
+</main>
+
+<footer class="bg-body-tertiary text-center text-lg-start" role="contentinfo">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Company
+    </div>
+</footer>
 </div>
 </body>
 </html>

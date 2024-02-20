@@ -65,7 +65,7 @@ public class CartService {
         return cartRepository.getAllCartElementsByClientName(name);
     }
 
-    public Cart getCartIdByClientName(String name) {
+    public Integer getCartIdByClientName(String name) {
         return cartRepository.getCartIdByClientName(name).orElseThrow(() -> new NoSuchElementException(
                 "Cart with client name = '%s' not found".formatted(name)));
     }

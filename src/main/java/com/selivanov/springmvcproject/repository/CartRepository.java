@@ -45,6 +45,7 @@ public class CartRepository {
             }
         }
     }
+
     public List<CartElement> getAllCartElementsByClientName(String name) {
         EntityManager entityManager = null;
         try {
@@ -58,7 +59,7 @@ public class CartRepository {
                             left join ce.cart cec
                             where cec.client.name = :name
                             """, CartElement.class)
-                    .setParameter("name",name)
+                    .setParameter("name", name)
                     .getResultList();
 
             entityManager.getTransaction().commit();
@@ -74,6 +75,7 @@ public class CartRepository {
             }
         }
     }
+
     public Optional<Cart> getCartById(Integer id) {
         EntityManager entityManager = null;
         try {
@@ -101,23 +103,24 @@ public class CartRepository {
             }
         }
     }
-    public Optional<Cart> getCartIdByClientName(String name) {
+
+    public Optional<Integer> getCartIdByClientName(String name) {
         EntityManager entityManager = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
 
-            Cart cart = entityManager
+            Integer cartId = entityManager
                     .createQuery("""
                             select c.id from Cart c
                             left join c.client cl
                             where cl.name = :name
-                            """, Cart.class)
+                            """, Integer.class)
                     .setParameter("name", name)
                     .getSingleResult();
 
             entityManager.getTransaction().commit();
-            return Optional.ofNullable(cart);
+            return Optional.ofNullable(cartId);
         } catch (Exception ex) {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
@@ -130,7 +133,7 @@ public class CartRepository {
         }
     }
 
-//    public Integer getCartIdByClientName(String name) {
+    //    public Integer getCartIdByClientName(String name) {
 //        EntityManager entityManager = null;
 //        try {
 //            entityManager = entityManagerFactory.createEntityManager();
@@ -141,7 +144,7 @@ public class CartRepository {
 //                            select c.id from Cart c
 //                            left join c.client cl
 //                            where cl.name = :name
-//                            """, Cart.class)
+//                            """, Integer.class)
 //                    .setParameter("name", name)
 //                    .getSingleResult().getId();
 //

@@ -79,24 +79,24 @@ public class ClientController {
     }
 
 
-    @GetMapping("/clients/{name}/orders")
-    public String getClientOrders(@PathVariable String name, Model model) {
-        List<Order> orders = clientService.getAllClientOrders(name);
-        model.addAttribute("orders", orders);
-        return "client/orders";
-    }
+//    @GetMapping("/clients/{name}/orders")
+//    public String getClientOrders(@PathVariable String name, Model model) {
+//        List<Order> orders = clientService.getAllClientOrders(name);
+//        model.addAttribute("orders", orders);
+//        return "client/orders";
+//    }
 
-    @GetMapping("/clients/{name}/orders/new")
-    public String getNewOrder(@PathVariable String name, Model model) {
-        model.addAttribute("name", name);
-        model.addAttribute("order", new Order());
-        return "client/new_order";
-    }
-
-    @PostMapping("/clients/{name}/orders")
-    public String addOrderToClient(@PathVariable String name,
-                                   @ModelAttribute Order order) {
-        clientService.addOrderToClient(name, order);
-        return "redirect:/clients/%s/orders".formatted(name);
-    }
+//    @GetMapping("/clients/{name}/orders/new")
+//    public String getNewOrder(@PathVariable String name, Model model) {
+//        model.addAttribute("name", name);
+//        model.addAttribute("order", new Order());
+//        return "client/new_order";
+//    }
+//
+//    @PostMapping("/clients/{name}/orders")
+//    public String addOrderToClient(@PathVariable String name,
+//                                   @ModelAttribute Order order) {
+//        clientService.addOrderToClient(name, order);
+//        return "redirect:/clients/%s/orders".formatted(name);
+//    }
 }

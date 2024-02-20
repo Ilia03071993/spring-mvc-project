@@ -11,39 +11,27 @@
 </head>
 <body>
 
+<header>
 <table class="table table-striped table-bordered mx-auto">
-    <thead class="table-dark">
+    <thead >
     <tr>
-        <th>Name</th>
-        <th>Email</th>
         <th>
-            <button>
-                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/register}" class="btn btn-primary" style="color: black;">Register</a>
+            <button class="btn btn-outline-primary">
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/register}"  style="color: black;">Register</a>
             </button>
-            <button>
-                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}" class="btn btn-primary" style="color: black;">Login</a>
+            <button class="btn btn-outline-primary">
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}"  style="color: black;">Login</a>
             </button>
         </th>
     </tr>
     </thead>
-    <tbody>
-<!--    <tr th:each="client: ${clients}">-->
-<!--        <td th:text="${client.name}"></td>-->
-<!--        <td th:text="${client.email}"></td>-->
+    </table>
+</header>
 
-<!--        <td>-->
-<!--            <form th:method="get" class="d-inline"-->
-<!--                  th:action="@{/clients/{clientId}/orders(clientId=${client.id})}">-->
-<!--                <button class="btn btn-primary">show</button>-->
-<!--            </form>-->
-
-<!--            <form th:method="get" class="d-inline"-->
-<!--                  th:action="@{/clients/{clientId}/orders/new(clientId=${client.id})}">-->
-<!--                <button class="btn btn-success">create</button>-->
-<!--            </form>-->
-<!--        </td>-->
-<!--    </tr>-->
-    </tbody>
-</table>
+<footer class="bg-body-tertiary text-center text-lg-start">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Company
+    </div>
+</footer>
 </body>
 </html>

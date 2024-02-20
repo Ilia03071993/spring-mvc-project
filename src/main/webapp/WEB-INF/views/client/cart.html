@@ -11,10 +11,12 @@
 </head>
 <body>
 <header>
-    <nav>
-        <ul>
-            <li><a th:href="@{/clients/{name}/shop(name=${name})}">>Shop</a></li>
-        </ul>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <button class="btn btn-primary" type="submit"><a class="navbar-brand"
+                                                             th:href="@{/clients/{name}/shop(name=${name})}">Shop</a>
+            </button>
+        </div>
     </nav>
 </header>
 
@@ -37,10 +39,15 @@
     </tbody>
 </table>
 <div>
-    <form th:action="@{/clients/{name}/cart/{id}/orders(name=${name},id=${id})}"
-          th:method="get" class="d-inline">
+    <form th:action="@{/clients/{name}/orders(name=${name})}"
+          th:method="post" class="d-inline">
         <button class="btn btn-success">Order</button>
     </form>
 </div>
+<footer class="bg-body-tertiary text-center text-lg-start">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Company
+    </div>
+</footer>
 </body>
 </html>

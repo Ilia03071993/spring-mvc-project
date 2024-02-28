@@ -1,19 +1,14 @@
 package com.selivanov.springmvcproject.service;
 
-import com.selivanov.springmvcproject.entity.Cart;
-import com.selivanov.springmvcproject.entity.CartElement;
-import com.selivanov.springmvcproject.entity.Client;
-import com.selivanov.springmvcproject.entity.Product;
-import com.selivanov.springmvcproject.repository.CartElementRepository;
+import com.selivanov.springmvcproject.entity.*;
 import com.selivanov.springmvcproject.repository.CartRepository;
-import com.selivanov.springmvcproject.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class CartService {
@@ -21,13 +16,15 @@ public class CartService {
     private final ClientService clientService;
     private final ProductService productService;
     private final CartElementService cartElementService;
+    private final OrderService orderService;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ClientService clientService, ProductService productService, CartElementService cartElementService) {
+    public CartService(CartRepository cartRepository, ClientService clientService, ProductService productService, CartElementService cartElementService, OrderService orderService) {
         this.cartRepository = cartRepository;
         this.clientService = clientService;
         this.productService = productService;
         this.cartElementService = cartElementService;
+        this.orderService = orderService;
     }
 
     public List<Cart> getAllCart() {
@@ -68,5 +65,26 @@ public class CartService {
     public Integer getCartIdByClientName(String name) {
         return cartRepository.getCartIdByClientName(name).orElseThrow(() -> new NoSuchElementException(
                 "Cart with client name = '%s' not found".formatted(name)));
+    }
+
+    public void createOrderFromCart(String clientName) {
+        List<CartElement> cartElements = getAllCartElementsByClientName(clientName);
+        Order ord = new Order();
+        List<OrderItem> orderItems = new ArrayList<>();
+        if (!cartElements.isEmpty()) {
+            for (CartElement cartElement : cartElements) {
+                OrderItem item = new OrderItem();
+                item.setOrder(ord);
+                item.setPrice(cartElement.getPrice());
+                item.setAmount(cartElement.getAmount());
+                item.setProduct(cartElement.getProduct());
+                item.setTotalPrice(cartElement.getPrice().multiply(BigDecimal.valueOf(cartElement.getAmount())));
+                orderItems.add(item);
+            }
+
+            ord.setClient(clientService.getClientByName(clientName));
+            ord.setOrderItemList(orderItems);
+        }
+        orderService.saveOrder(ord);
     }
 }

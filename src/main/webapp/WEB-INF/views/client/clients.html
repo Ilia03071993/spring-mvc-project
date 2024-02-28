@@ -7,28 +7,52 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            margin-top: auto;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
 </head>
 <body>
-
-<header>
-<table class="table table-striped table-bordered mx-auto">
-    <thead >
-    <tr>
-        <th>
-            <button class="btn btn-outline-primary">
-                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/register}"  style="color: black;">Register</a>
+<header class="clearfix">
+    <div class="d-flex justify-content-between align-items-center" style="background-color: #FAEBD7;">
+        <img src="data:image/png;base64,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" alt="The Shop" width="70" height="70">
+        <div>
+            <button class="btn btn-outline-primary me-2">
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/register}" style="color: black;">Register</a>
             </button>
-            <button class="btn btn-outline-primary">
-                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}"  style="color: black;">Login</a>
+            <button class="btn btn-outline-primary me-2">
+                <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}" style="color: black;">Login</a>
             </button>
-        </th>
-    </tr>
-    </thead>
-    </table>
+        </div>
+    </div>
 </header>
+<!--<header class="clearfix">-->
+<!--    <div class="d-flex justify-content-end" style="background-color: #FAEBD7">-->
+<!--        <button class="btn btn-outline-primary me-2">-->
+<!--            <a th:href="@{http://localhost:8080/spring-mvc-project/clients/register}" style="color: black;">Register</a>-->
+<!--        </button>-->
+<!--        <button class="btn btn-outline-primary">-->
+<!--            <a th:href="@{http://localhost:8080/spring-mvc-project/clients/login}" style="color: black;">Login</a>-->
+<!--        </button>-->
+<!--    </div>-->
+<!--</header>-->
 
-<footer class="bg-body-tertiary text-center text-lg-start">
+<footer class="bg-body-tertiary text-center text-lg-start" role="contentinfo">
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
         © 2024 Company
     </div>

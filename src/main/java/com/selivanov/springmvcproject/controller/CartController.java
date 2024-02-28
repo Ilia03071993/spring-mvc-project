@@ -1,6 +1,5 @@
 package com.selivanov.springmvcproject.controller;
 
-import com.selivanov.springmvcproject.entity.Cart;
 import com.selivanov.springmvcproject.entity.CartElement;
 import com.selivanov.springmvcproject.service.CartElementService;
 import com.selivanov.springmvcproject.service.CartService;
@@ -44,5 +43,10 @@ public class CartController {
 
         return "client/cart";
     }
+    @DeleteMapping("/clients/{name}/cart/{id}")
+    public String removeCartItem(@PathVariable String name, @PathVariable Integer id) {
 
+        cartElementService.deleteCartElement(id);
+        return "redirect:/clients/%s/cart".formatted(name);
+    }
 }

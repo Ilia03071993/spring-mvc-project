@@ -5,54 +5,42 @@ import
         com.selivanov.springmvcproject.entity.CartElement;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 @Repository
 public class CartRepository {
 
     private final EntityManagerFactory entityManagerFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public CartRepository(EntityManagerFactory entityManagerFactory) {
+    public CartRepository(EntityManagerFactory entityManagerFactory, SessionFactory sessionFactory) {
         this.entityManagerFactory = entityManagerFactory;
+        this.sessionFactory = sessionFactory;
     }
 
     public List<Cart> getAllCart() {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            List<Cart> cartElements = entityManager
+        Function<Session, List<Cart>> getAllCart = (session) -> {
+            return session
                     .createQuery("from Cart ", Cart.class)
                     .getResultList();
+        };
 
-            entityManager.getTransaction().commit();
-            return cartElements;
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
+        return executeInTransaction(getAllCart);
     }
 
     public List<CartElement> getAllCartElementsByClientName(String name) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            List<CartElement> cartElements = entityManager
+        Function<Session, List<CartElement>> getAllCartElements = (session) -> {
+            return session
                     .createQuery("""
                             select ce from CartElement ce
                             left join fetch ce.product cep
@@ -61,79 +49,40 @@ public class CartRepository {
                             """, CartElement.class)
                     .setParameter("name", name)
                     .getResultList();
+        };
 
-            entityManager.getTransaction().commit();
-            return cartElements;
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
+        return executeInTransaction(getAllCartElements);
     }
 
     public Optional<Cart> getCartById(Integer id) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            Cart cart = entityManager
+        Function<Session, Optional<Cart>> getCart = (session) -> {
+            return Optional.ofNullable(session
                     .createQuery("""
                             select c from CartElement c
                               where c.id = :id
                             """, Cart.class)
                     .setParameter("id", id)
-                    .getSingleResult();
+                    .getSingleResult());
+        };
 
-            entityManager.getTransaction().commit();
-            return Optional.ofNullable(cart);
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
+        return executeInTransaction(getCart);
     }
 
     public Optional<Integer> getCartIdByClientName(String name) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            Integer cartId = entityManager
+        Function<Session, Optional<Integer>> getCartId = (session) -> {
+            return Optional.ofNullable(session
                     .createQuery("""
                             select c.id from Cart c
                             left join c.client cl
                             where cl.name = :name
                             """, Integer.class)
                     .setParameter("name", name)
-                    .getSingleResult();
-
-            entityManager.getTransaction().commit();
-            return Optional.ofNullable(cartId);
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
+                    .getSingleResult());
+        };
+        return executeInTransaction(getCartId);
     }
 
-    //    public Integer getCartIdByClientName(String name) {
+    //        public Integer getCartIdByClientName(String name) {
 //        EntityManager entityManager = null;
 //        try {
 //            entityManager = entityManagerFactory.createEntityManager();
@@ -162,50 +111,54 @@ public class CartRepository {
 //        }
 //    }
     public void saveCart(Cart cart) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
+        Consumer<Session> saveCart = (session) -> {
             if (cart.getId() == null) {
-                entityManager.persist(cart);
+                session.persist(cart);
             } else {
-                entityManager.merge(cart);
+                session.merge(cart);
             }
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException(ex);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
+        };
+        executeInTransaction(saveCart);
     }
 
     public void removeCart(Integer id) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-
-            Cart cart = entityManager.find(Cart.class, id);
+        Consumer<Session> removeCart = (session) -> {
+            Cart cart = session.find(Cart.class, id);
             if (cart != null) {
-                entityManager.remove(cart);
+                session.remove(cart);
             }
+        };
+        executeInTransaction(removeCart);
+    }
 
-            entityManager.getTransaction().commit();
+    private void executeInTransaction(Consumer<Session> consumer) {
+        Function<Session, Void> func = (session -> {
+            consumer.accept(session);
+            return null;
+        });
+        executeInTransaction(func);
+    }
+
+    private <T> T executeInTransaction(Function<Session, T> func) {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+
+            session.getTransaction().begin();
+
+            T result = func.apply(session);
+
+            session.getTransaction().commit();
+
+            return result;
         } catch (Exception ex) {
-            if (entityManager != null) {
-                entityManager.getTransaction().rollback();
+            if (session != null) {
+                session.getTransaction().rollback(); // 0/4 - success
             }
             throw new RuntimeException(ex);
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
+            if (session != null) {
+                session.close();
             }
         }
     }

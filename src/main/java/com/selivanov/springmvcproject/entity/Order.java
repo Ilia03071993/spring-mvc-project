@@ -13,7 +13,7 @@ public class Order {
     private Integer id;
 
     private String street;
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             fetch = FetchType.LAZY)
     private List<OrderItem> orderItemList = new ArrayList<>();
     @ManyToOne(cascade = {CascadeType.MERGE})

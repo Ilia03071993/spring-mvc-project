@@ -20,11 +20,6 @@ public class CartElementService {
         this.productRepository = productRepository;
     }
 
-//    public List<CartElement> getAllCartElementsByCart(Integer id) {
-//        return cartElementRepository.getAllCartElementsByCartId(id);
-//
-//    }
-
     public List<CartElement> getAllCartElements() {
         return cartElementRepository.getAllCartElements();
     }

@@ -13,7 +13,7 @@ public class Client {
     private Integer id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

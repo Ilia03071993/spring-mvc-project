@@ -1,8 +1,6 @@
 package com.selivanov.springmvcproject.controller;
 
-import com.selivanov.springmvcproject.entity.CartElement;
 import com.selivanov.springmvcproject.entity.Order;
-import com.selivanov.springmvcproject.entity.OrderItem;
 import com.selivanov.springmvcproject.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,18 +16,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderItemService orderItemService;
-    private final ProductService productService;
     private final CartService cartService;
-    private final ClientService clientService;
-
 
     @Autowired
-    public OrderController(OrderService orderService, OrderItemService orderItemService, ProductService productService, CartService cartService, ClientService clientService) {
+    public OrderController(OrderService orderService, OrderItemService orderItemService, CartService cartService) {
         this.orderService = orderService;
         this.orderItemService = orderItemService;
-        this.productService = productService;
         this.cartService = cartService;
-        this.clientService = clientService;
     }
 
     @GetMapping("/clients/{name}/orders")
@@ -43,38 +36,16 @@ public class OrderController {
     }
 
     @PostMapping("/clients/{name}/orders")
-    public String createOrderFromCart(@PathVariable String name,
-                                      @ModelAttribute OrderItem orderItem,
-                                      @ModelAttribute Order order) {
-        List<CartElement> cartElements = cartService.getAllCartElementsByClientName(name);
-        Order ord = new Order();
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (CartElement cartElement : cartElements) {
-            OrderItem item = new OrderItem();
-            item.setOrder(ord);
-            item.setPrice(cartElement.getPrice());
-            item.setAmount(cartElement.getAmount());
-            item.setProduct(cartElement.getProduct());
-            item.setTotalPrice(cartElement.getPrice().multiply(BigDecimal.valueOf(cartElement.getAmount())));
-            orderItems.add(item);
-        }
-        ord.setClient(clientService.getClientByName(name));
-        ord.setOrderItemList(orderItems);
-        orderService.saveOrder(ord);
-
-        //save order
-
+    public String createOrderFromCart(@PathVariable String name) {
+        cartService.createOrderFromCart(name);
         return "redirect:/clients/%s/orders".formatted(name);
     }
 
     @DeleteMapping("/clients/{name}/orders/{id}")
     public String removeOrder(@PathVariable String name, @PathVariable Integer id) {
-        if (id != null) {
-            orderService.removeOrder(id);
-        }
+        orderService.removeOrder(id);
         return "redirect:/clients/%s/orders".formatted(name);
     }
-
 }
 //--
 //    @GetMapping("/orders/{id}/edit")
@@ -101,4 +72,3 @@ public class OrderController {
 //        }
 //        return "redirect:/clients";
 //    }
-

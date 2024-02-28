@@ -1,7 +1,6 @@
 package com.selivanov.springmvcproject.controller;
 
 import com.selivanov.springmvcproject.entity.*;
-import com.selivanov.springmvcproject.service.CartElementService;
 import com.selivanov.springmvcproject.service.ClientService;
 import com.selivanov.springmvcproject.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +14,16 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
     private final ProductService productService;
-    private final CartElementService cartElementService;
+
 
     @Autowired
-    private ClientController(ClientService clientService, ProductService productService, CartElementService cartElementService) {
+    private ClientController(ClientService clientService, ProductService productService) {
         this.clientService = clientService;
         this.productService = productService;
-        this.cartElementService = cartElementService;
     }
 
-    @GetMapping("/clients")
-    public String getAllClients(Model model) {
-        List<Client> allClients = clientService.getAllClients();
-        model.addAttribute("clients", allClients);
+    @GetMapping("/")
+    public String getAllClients() {
         return "client/clients";
     }
 
@@ -78,14 +74,13 @@ public class ClientController {
         return "client/shop";
     }
 
-
 //    @GetMapping("/clients/{name}/orders")
 //    public String getClientOrders(@PathVariable String name, Model model) {
 //        List<Order> orders = clientService.getAllClientOrders(name);
 //        model.addAttribute("orders", orders);
 //        return "client/orders";
 //    }
-
+//
 //    @GetMapping("/clients/{name}/orders/new")
 //    public String getNewOrder(@PathVariable String name, Model model) {
 //        model.addAttribute("name", name);
